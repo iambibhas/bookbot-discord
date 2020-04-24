@@ -6,8 +6,11 @@ client.on('ready', () => {
 });
 
 client.on('message', message => {
-    console.log(message);
-    console.log(message.mentions.members);
+    if (message.mentions.has(client.user)) {
+        message.channel.send("I was mentioned!");
+    } else {
+        message.channel.send("I was not mentioned");
+    }
     if (message.content === 'ping') {
         message.channel.send('pong');
     }
