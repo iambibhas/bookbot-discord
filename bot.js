@@ -8,9 +8,7 @@ client.on('ready', () => {
 client.on('message', message => {
     if (message.mentions.has(client.user)) {
         // we only care about messages where the bot is mentioned
-        console.log(message.content);
-        msg = message.content.replace("<@!" + client.user.id + "> ", "");
-        console.log(msg);
+        msg = message.content.replace(/<@!\d+>/gimu, "").trim()
         if (msg === 'ping') {
             message.channel.send('pong');
         }
