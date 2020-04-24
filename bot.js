@@ -6,6 +6,8 @@ client.on('ready', () => {
 });
 
 client.on('message', message => {
+    console.log(message);
+    console.log(message.mentions.members);
     if (message.content === 'ping') {
         message.channel.send('pong');
     }
