@@ -10,6 +10,7 @@ client.on('message', message => {
         // we only care about messages where the bot is mentioned
         console.log(message.content);
         msg = message.content.replace("@" + client.user.username + " ", "");
+        console.log(msg);
         if (msg === 'ping') {
             message.channel.send('pong');
         }
