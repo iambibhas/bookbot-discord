@@ -8,11 +8,6 @@ client.on('ready', () => {
 client.on('message', message => {
     if (message.mentions.has(client.user)) {
         message.channel.send("I was mentioned!");
-    } else {
-        message.channel.send("I was not mentioned");
-    }
-    if (message.content === 'ping') {
-        message.channel.send('pong');
     }
 });
 
