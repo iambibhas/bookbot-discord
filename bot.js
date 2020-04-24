@@ -8,8 +8,10 @@ client.on('ready', () => {
 client.on('message', message => {
     if (message.mentions.has(client.user)) {
         // we only care about messages where the bot is mentioned
-        if (message.content === 'ping') {
-            message.reply('pong');
+        console.log(message.content);
+        msg = message.content.replace("@" + client.user.username + " ", "");
+        if (msg === 'ping') {
+            message.channel.send('pong');
         }
     }
 });
