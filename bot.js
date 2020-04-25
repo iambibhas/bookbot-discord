@@ -73,7 +73,7 @@ client.on('message', message => {
                             topbook.publication_year = json_book_response.GoodreadsResponse.book.publication_year;
 
                             // set cache
-                            redisclient.set(text.toLowerCase(), JSON.stringify(topbook));
+                            // redisclient.set(text.toLowerCase(), JSON.stringify(topbook));
 
                             var fullMessage = getMessage(topbook);
                             message.channel.send(fullMessage);
