@@ -50,6 +50,7 @@ client.on('message', message => {
         msg = message.content.replace(/<@!\d+>/gimu, "").trim()
 
         if (msg !== '') {
+            var topbook;
             var gr_url = "http://www.goodreads.com/search/index.xml?key=" + gr_key + "&q=" + encodeURIComponent(msg);
 
             fetch(gr_url)
@@ -66,21 +67,23 @@ client.on('message', message => {
                         topbook = json_response.GoodreadsResponse.search.results.work[0];
                     }
 
-                    var gr_book_details_url = "https://www.goodreads.com/book/show/" + topbook.best_book.id['$t'] + ".xml?key=" + gr_key;
-                    fetch(gr_book_details_url)
-                        .then(res => res.text())
-                        .then(body => {
-                            var json_book_response = JSON.parse(XML2JSON.toJson(body));
-                            topbook.description = json_book_response.GoodreadsResponse.book.description;
-                            topbook.publication_year = json_book_response.GoodreadsResponse.book.publication_year;
+                    if (topbook !== undefined) {
+                        var gr_book_details_url = "https://www.goodreads.com/book/show/" + topbook.best_book.id['$t'] + ".xml?key=" + gr_key;
+                        fetch(gr_book_details_url)
+                            .then(res => res.text())
+                            .then(body => {
+                                var json_book_response = JSON.parse(XML2JSON.toJson(body));
+                                topbook.description = json_book_response.GoodreadsResponse.book.description;
+                                topbook.publication_year = json_book_response.GoodreadsResponse.book.publication_year;
 
-                            // set cache
-                            // redisclient.set(text.toLowerCase(), JSON.stringify(topbook));
+                                // set cache
+                                // redisclient.set(text.toLowerCase(), JSON.stringify(topbook));
 
-                            var fullMessage = getMessage(topbook);
-                            message.channel.send(fullMessage);
-                            return;
-                        });
+                                var fullMessage = getMessage(topbook);
+                                message.channel.send(fullMessage);
+                                return;
+                            });
+                    }
                 });
         }
     }
