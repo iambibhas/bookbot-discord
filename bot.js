@@ -35,7 +35,9 @@ function getMessage(topbook) {
 
     var fullMessage = `**${topbook.best_book.title}** (${publication_year})
 by *${topbook.best_book.author.name}* - ⭐️ ${rating}
+
 ${description}
+
 Goodreads URL: https://www.goodreads.com/book/show/${topbook.best_book.id['$t']}`;
     return fullMessage;
 }
@@ -53,7 +55,6 @@ client.on('message', message => {
             fetch(gr_url)
                 .then(res => res.text())
                 .then(body => {
-                    console.log(body)
                     var json_response = JSON.parse(XML2JSON.toJson(body));
 
                     if (json_response.GoodreadsResponse.search.results == "") {
