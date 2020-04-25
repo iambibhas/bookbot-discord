@@ -8,6 +8,38 @@ client.on('ready', () => {
     console.log('I am ready!');
 });
 
+
+function getMessage(topbook) {
+    var rating = 0.0;
+    if (typeof topbook.average_rating === 'object') {
+        rating = topbook.average_rating['$t'];
+    } else {
+        rating = topbook.average_rating;
+    }
+
+    var description = '';
+    if (typeof topbook.description !== 'object') {
+        description = topbook.description;
+    }
+
+    var publication_year = '';
+    if (typeof topbook.publication_year === 'object') {
+        publication_year = topbook.original_publication_year['$t'];
+    } else {
+        publication_year = topbook.publication_year;
+    }
+
+    if (description !== undefined) {
+        description = description.replace(/\<br \/\>/g, "\n").replace(/<(?:.|\n)*?>/gm, '');
+    }
+
+    var fullMessage = `<b>${topbook.best_book.title}</b> (${publication_year})
+by <i>${topbook.best_book.author.name}</i> - ⭐️ ${rating}
+${description}
+Goodreads URL: https://www.goodreads.com/book/show/${topbook.best_book.id['$t']}`;
+    return fullMessage;
+}
+
 client.on('message', message => {
     if (message.mentions.has(client.user)) {
         // we only care about messages where the bot is mentioned
@@ -23,11 +55,32 @@ client.on('message', message => {
                 .then(body => {
                     console.log(body)
                     var json_response = JSON.parse(XML2JSON.toJson(body));
-                    console.log(json_response);
+
+                    if (json_response.GoodreadsResponse.search.results == "") {
+                        message.channel.send("No book found! :(")
+                    } else if (json_response.GoodreadsResponse.search.results.work[0] == undefined) {
+                        topbook = json_response.GoodreadsResponse.search.results.work;
+                    } else { /* More than one book received */
+                        topbook = json_response.GoodreadsResponse.search.results.work[0];
+                    }
+
+                    var gr_book_details_url = "https://www.goodreads.com/book/show/" + topbook.best_book.id['$t'] + ".xml?key=" + gr_key;
+                    fetch(gr_book_details_url)
+                        .then(res => res.text())
+                        .then(body => {
+                            var json_book_response = JSON.parse(XML2JSON.toJson(body));
+                            topbook.description = json_book_response.GoodreadsResponse.book.description;
+                            topbook.publication_year = json_book_response.GoodreadsResponse.book.publication_year;
+
+                            // set cache
+                            redisclient.set(text.toLowerCase(), JSON.stringify(topbook));
+
+                            var fullMessage = getMessage(topbook);
+                            message.channel.send(fullMessage);
+                        });
                 });
         }
     }
 });
 
-// THIS  MUST  BE  THIS  WAY
 client.login(process.env.BOT_TOKEN);
