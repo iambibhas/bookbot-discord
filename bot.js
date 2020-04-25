@@ -33,8 +33,8 @@ function getMessage(topbook) {
         description = description.replace(/\<br \/\>/g, "\n").replace(/<(?:.|\n)*?>/gm, '');
     }
 
-    var fullMessage = `<b>${topbook.best_book.title}</b> (${publication_year})
-by <i>${topbook.best_book.author.name}</i> - ⭐️ ${rating}
+    var fullMessage = `**${topbook.best_book.title}** (${publication_year})
+by *${topbook.best_book.author.name}* - ⭐️ ${rating}
 ${description}
 Goodreads URL: https://www.goodreads.com/book/show/${topbook.best_book.id['$t']}`;
     return fullMessage;
