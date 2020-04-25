@@ -59,6 +59,7 @@ client.on('message', message => {
 
                     if (json_response.GoodreadsResponse.search.results == "") {
                         message.channel.send("No book found! :(")
+                        return;
                     } else if (json_response.GoodreadsResponse.search.results.work[0] == undefined) {
                         topbook = json_response.GoodreadsResponse.search.results.work;
                     } else { /* More than one book received */
@@ -78,6 +79,7 @@ client.on('message', message => {
 
                             var fullMessage = getMessage(topbook);
                             message.channel.send(fullMessage);
+                            return;
                         });
                 });
         }
