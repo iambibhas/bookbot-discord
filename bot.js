@@ -30,7 +30,7 @@ function getMessage(topbook) {
     }
 
     if (description !== undefined) {
-        description = description.replace(/\<br \/\>/g, "\n").replace(/<(?:.|\n)*?>/gm, '');
+        description = description.replace(/\<br \/\>/g, "\n").replace(/<(?:.|\n)*?>/gm, '').substr(0, 1500) + "…";
     }
 
     var fullMessage = `**${topbook.best_book.title}** (${publication_year})
