@@ -48,6 +48,7 @@ client.on('message', message => {
 
         // strip all the mentions from the message
         msg = message.content.replace(/<@!\d+>/gimu, "").trim()
+        console.log("Searching for: " + msg);
 
         if (msg !== '') {
             var topbook;
@@ -68,6 +69,9 @@ client.on('message', message => {
                     }
 
                     if (topbook !== undefined) {
+                        console.log("Found book");
+                        console.log(topbook);
+
                         var gr_book_details_url = "https://www.goodreads.com/book/show/" + topbook.best_book.id['$t'] + ".xml?key=" + gr_key;
                         fetch(gr_book_details_url)
                             .then(res => res.text())
